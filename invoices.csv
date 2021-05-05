@@ -1,1 +1,9 @@
-barcode,price,brand,name,inventory number
+name,price,purchased number,total price
+
+
+Butter,2750,2,5500
+Olive,32000,4,128000
+Cheese,16300,20,326000
+Honey,24780,12,297360
+Cheese,16300,2,32600
+Butter,2750,3,8250

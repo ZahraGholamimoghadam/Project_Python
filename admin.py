@@ -1,3 +1,6 @@
+import csv
+import pandas as pd
+
 
 class Admin:
     def __init__(self, username, password):
@@ -9,10 +12,36 @@ class Admin:
         self.password = password.encode()
 
     @staticmethod
-    def create_product():
-        return 'Admin defines barcode, price, brand, name and inventory number for every product. ' \
-               'He does this work with saving these properties in a file.'
+    def add_product(info_product):
+        with open("products.csv", 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(info_product)
+
 
     @staticmethod
     def show_invoices():
-        return 'Previous purchase invoice is displayed to admin.'
+        with open("invoices.csv") as file:
+            df = pd.read_csv(file)
+            if df.empty:
+                print('\n---> No purchases have been made so far.')
+            else:
+                print(f'\nInvoice of purchases is as follows:\n\n{df}')
+
+    def checking_inventory():
+        df = pd.read_csv('products.csv')
+        is_empty = df.loc[df['inventory number'] == 0].empty
+        if is_empty == False:
+            print(f'Note that the following products have zero inventory:\n\n'
+                  f'{df.loc[df["inventory number"] == 0]}')
+
+
+
+
+
+
+
+
+
+
+
+
