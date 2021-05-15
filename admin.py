@@ -1,5 +1,9 @@
 import csv
 import pandas as pd
+import logging
+
+logging.basicConfig(level=logging.DEBUG,filename='store_logs.log', filemode='a',
+                    format='%(name)s - %(levelname)s - %(message)s %(asctime)s', datefmt='%d-%b-%y %H:%M:%S')
 
 
 class Admin:
@@ -17,22 +21,51 @@ class Admin:
             writer = csv.writer(file)
             writer.writerow(info_product)
 
-
     @staticmethod
     def show_invoices():
-        with open("invoices.csv") as file:
-            df = pd.read_csv(file)
+        try:
+            with open("invoices.csv") as file:
+                df = pd.read_csv(file)
+        except FileNotFoundError as e:
+            print(e)
+        else:
             if df.empty:
                 print('\n---> No purchases have been made so far.')
             else:
                 print(f'\nInvoice of purchases is as follows:\n\n{df}')
 
+    @staticmethod
     def checking_inventory():
-        df = pd.read_csv('products.csv')
-        is_empty = df.loc[df['inventory number'] == 0].empty
-        if is_empty == False:
-            print(f'Note that the following products have zero inventory:\n\n'
-                  f'{df.loc[df["inventory number"] == 0]}')
+        try:
+            df = pd.read_csv('products.csv')
+        except FileNotFoundError as e:
+            print(e)
+            logging.error(e)
+        else:
+            is_empty = df.loc[df['inventory number'] == 0].empty
+            if not is_empty:
+                df1 = df.loc[df['inventory number'] == 0]
+                df2 = df1.filter(['name', 'brand'])
+                print(f'Note that the following products have zero inventory:\n\n{df2}')
+                names = df2['name'].values
+                for i in names:
+                    logging.warning(f'The inventory of {i} was zero.')
+
+    @staticmethod
+    def unblocking(username):
+        try:
+            df = pd.read_csv('accounts.csv')
+        except FileNotFoundError as e:
+            print(e)
+            logging.error(e)
+        else:
+            # df.replace(to_replace=df['status'].values, value=1, inplace=True)
+            row_number = df.index[df['usr'] == username].tolist()
+            df.loc[row_number[0], 'status'] = 1
+            df.to_csv('accounts.csv', index=False)
+
+
+
 
 
 
