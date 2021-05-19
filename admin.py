@@ -59,7 +59,6 @@ class Admin:
             print(e)
             logging.error(e)
         else:
-            # df.replace(to_replace=df['status'].values, value=1, inplace=True)
             row_number = df.index[df['usr'] == username].tolist()
             df.loc[row_number[0], 'status'] = 1
             df.to_csv('accounts.csv', index=False)

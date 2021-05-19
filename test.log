@@ -1,8 +1,0 @@
-INFO- 12-May-21 19:15:45-root-This info message
-INFO- 13-May-21 16:41:11-root-This info message
-INFO- 13-May-21 16:41:27-root-This info message
-INFO- 13-May-21 16:42:36-root-This info message
-ERROR- 13-May-21 22:24:49-root-[Errno 2] No such file or directory: 'account.csv'
-ERROR- 13-May-21 22:25:37-root-[Errno 2] No such file or directory: 'account.csv'
-ERROR- 13-May-21 22:26:00-root-[Errno 2] No such file or directory: 'account.csv'
-ERROR- 13-May-21 22:51:12-root-[Errno 2] No such file or directory: 'account.csv'

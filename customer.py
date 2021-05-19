@@ -27,21 +27,6 @@ class Customer:
             else:
                 return False
 
-    @staticmethod
-    def changing_status(username):
-        """
-        In this function we unblock the blocked users.
-        """
-        try:
-            with open('accounts.csv') as f:
-                df = pd.read_csv(f)
-        except FileNotFoundError as e:
-            print(e)
-            logging.error(e)
-        else:
-            df.loc[df['usr'] == username, 'status'] = 0
-            df.to_csv("accounts.csv", index=False)
-
     def login(self):
         try:
             with open("accounts.csv") as file:
@@ -66,6 +51,21 @@ class Customer:
                     Customer.changing_status(self.username)
 
             return flg
+
+    @staticmethod
+    def changing_status(username):
+        """
+        In this function we unblock the blocked users.
+        """
+        try:
+            with open('accounts.csv') as f:
+                df = pd.read_csv(f)
+        except FileNotFoundError as e:
+            print(e)
+            logging.error(e)
+        else:
+            df.loc[df['usr'] == username, 'status'] = 0
+            df.to_csv("accounts.csv", index=False)
 
     @staticmethod
     def show_products():
@@ -110,6 +110,7 @@ class Customer:
                                       'purchased number': lst_inputs[i][1],
                                       'total price': int(reader[row_number]['price']) * lst_inputs[i][1],
                                       "customer's name": username})
+                    Customer.update_inventory(lst_inputs[i])
                 else:
                     print(f'\nInventory of {reader[row_number]["name"]} is {reader[row_number]["inventory number"]}'
                           f' that is less than the number you requested.')
@@ -117,19 +118,17 @@ class Customer:
             Customer.billing(lst_orders)
 
     @staticmethod
-    def update_inventory(lst_input):
+    def update_inventory(tuple_input):
         try:
             df = pd.read_csv("products.csv")
         except FileNotFoundError as e:
             print(e)
             logging.error(e)
         else:
-            for i in range(len(lst_input)):
-                # updating the column value
-                df.loc[lst_input[i][0], 'inventory number'] -= lst_input[i][1]
-                # writing into the file
-                df.to_csv("products.csv", index=False)
-
+            # updating the column value
+            df.loc[tuple_input[0], 'inventory number'] -= tuple_input[1]
+            # writing into the file
+            df.to_csv("products.csv", index=False)
 
 
 

@@ -27,7 +27,6 @@ def customer_interaction(username):
                 lst2 = list(map(int, input("Enter the number of selected products in order with specifying ',': ").split(',')))
                 lst_input = list(zip(lst1, lst2))
                 Customer.shopping(lst_input, username)
-                Customer.update_inventory(lst_input)
             elif choice == 3:
                 break
         except AssertionError:
@@ -55,11 +54,15 @@ def admin_interaction():
                 Admin.show_invoices()
             elif choice == 3:
                 df = pd.read_csv('accounts.csv')
-                df1 = df.loc[df['status'] == 0]
-                df2 = df1.filter(['usr'])
-                print(f'\n The following users have been blocked:\n{df2}\n')
-                username = input('Which user do you want to unblock?(enter corresponding user: ')
-                Admin.unblocking(username)
+                is_empty = df.loc[df['status'] == 0].empty
+                if not is_empty:
+                    df1 = df.loc[df['status'] == 0]
+                    df2 = df1.filter(['usr'])
+                    print(f'\n The following users have been blocked:\n{df2}\n')
+                    username = input('Which user do you want to unblock?(enter corresponding user): ')
+                    Admin.unblocking(username)
+                else:
+                    print('\nNo users have been blocked yet.')
             elif choice == 4:
                 break
         except AssertionError:
@@ -84,6 +87,7 @@ while choice == 'y':
                 admin_interaction()
             else:
                 print('-->Wrong security code!')
+                continue
         else:
             person = Customer(input('Enter your username: '), input('Enter your password: '))
             if person.login():
@@ -100,7 +104,6 @@ while choice == 'y':
             if person.login():
                 customer_interaction(person.username)
         else:
-            # raise Exception("\nThis username has already been used and isn't valid!")
             print("\nThis username has already been used and isn't valid!")
     else:
         person = Customer(input('Enter your username: '), input('Enter your password: '))
